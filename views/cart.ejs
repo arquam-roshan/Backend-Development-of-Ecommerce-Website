@@ -1,0 +1,73 @@
+<%- include("partials/header.ejs") %>
+
+        <section id="page-header" class="about-header">
+            
+            <h2>#cart</h2>
+           
+            <p>Add your coupon code & SAVE upto 70%</p>
+            
+
+        </section>
+        <section id="cart" class="section-p1">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <td>REMOVE</td>
+                        <td>IMAGE</td>
+                        <td>PRODUCT</td>
+                        <td>PRICE</td>
+                        <td>QUANTITY</td>
+                        <td>SUBTOTAL</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% var total = 0; if(locals.products) {%>
+                        <% for(let i = 0; i < products.length; i++) {%>
+                            <tr>
+                                <td><a href="/remove?id=<%= products[i].product_id %>"><i class="far fa-times-circle"></i></a></td>
+                                <td><img src="<%= products[i].image %>" alt=""></td>
+                                <td><%= products[i].product_name %></td>
+                                <td><%= products[i].product_price %></td>
+                                <td><input type="number" value="<%= products[i].quantity %>" min="<%= products[i].quantity %>" max="<%= products[i].quantity %>"></td>
+                                <% total += products[i].product_price * products[i].quantity %>
+                                <td>LKR <%= products[i].product_price * products[i].quantity %></td>
+                            </tr>
+                            <% } %>
+                        <%} else {%> <td>Add items to cart to view them</td> <% } %>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="cart-add" class="section-p1">
+            <div id="coupon">
+                <h3>Apply Coupon</h3>
+                <div>
+                    <input type="text" placeholder="Enter your coupon">
+                    <button class="normal">Apply</button>
+                </div>
+            </div>
+            <div id="subtotal">
+                <h3>Cart Total</h3>
+                <table>
+                    <tr>
+                        <td>Cart Subtotal</td>
+                        <td>LKR <%= total %></td>
+                    </tr>
+                    <tr>
+                        <td>Shipping</td>
+                        
+                        <td><% if(!locals.shipping) {shipping = 0;%>Free <%} else {%> <%= shipping %> <%}%> </td>
+
+                    </tr>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><strong>LKR <%= total + shipping %></strong></td>
+                    </tr>
+                </table>
+                <button class="normal">Proceed to checkout</button>
+            </div>
+        </section>
+        
+
+
+<%- include("partials/footer.ejs") %>
