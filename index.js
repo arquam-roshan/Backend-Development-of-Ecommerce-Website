@@ -5,17 +5,17 @@ import pg from "pg";
 import env from "dotenv";
 
 const app = express();
-const port = 5500;
+const port = 3000;
 env.config();
 
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
-        resave:false,
+        resave: false,
         saveUninitialized: true
     })
 );
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 const db = new pg.Client({
@@ -32,7 +32,7 @@ let products = [];
 app.get("/", async (req, res) => {
     let fproducts = [];
     let nproducts = [];
-    
+
     const fresult = await db.query("SELECT product.id as product_id, image, brand.name as brand_name, product.name as product_name, price FROM product JOIN brand ON product.brand_id = brand.id WHERE image LIKE '%f%' || '%.jpg';");
     fresult.rows.forEach(product => {
         fproducts.push(product);
@@ -50,7 +50,7 @@ app.get("/", async (req, res) => {
     });
 });
 
-app.get("/shop", async(req, res) => {
+app.get("/shop", async (req, res) => {
 
     products = [];
 
@@ -59,7 +59,7 @@ app.get("/shop", async(req, res) => {
         products.push(product);
     });
 
-    res.render("shop.ejs", {active: "shop", products: products});
+    res.render("shop.ejs", { active: "shop", products: products });
 });
 
 app.get("/sproduct/:productId", async (req, res) => {
@@ -68,42 +68,42 @@ app.get("/sproduct/:productId", async (req, res) => {
 
     const result = await db.query("SELECT * FROM product WHERE id = $1", [productId],);
     req.session.products = result.rows[0];
-    
+
     res.redirect("/sproduct");
 });
 
 app.get("/sproduct", (req, res) => {
 
     // if there is no selected product in the current session, user redirected to shop
-    if(!req.session.products) {
+    if (!req.session.products) {
         req.session.products = {};
         res.redirect("/shop");
         return;
     }
     const product = req.session.products;
 
-    res.render("sproduct.ejs", {active: "shop", product: product});
+    res.render("sproduct.ejs", { active: "shop", product: product });
 });
 
 app.get("/cart", (req, res) => {
     // console.log(req.session.cart);
-    res.render("cart.ejs", {active: 'cart', products: req.session.cart});
+    res.render("cart.ejs", { active: 'cart', products: req.session.cart });
 });
 
 app.get("/about", (req, res) => {
-    res.render("about.ejs", {active: 'about'});
+    res.render("about.ejs", { active: 'about' });
 });
 
 app.get("/contact", (req, res) => {
-    res.render("contact.ejs", {active: 'contact'});
+    res.render("contact.ejs", { active: 'contact' });
 });
 
 app.get("/remove", (req, res) => {
     const id = req.query.id;
 
-    if(req.session.cart) {
-        for(let i = 0; i < req.session.cart.length; i++) {
-            if(id == req.session.cart[i].product_id) {
+    if (req.session.cart) {
+        for (let i = 0; i < req.session.cart.length; i++) {
+            if (id == req.session.cart[i].product_id) {
                 req.session.cart.splice(i, 1);
             }
         }
@@ -125,30 +125,30 @@ app.post("/addtocart", async (req, res) => {
     const price = parseFloat(req.body.price);
     const image = req.body.image;
     const quantity = parseInt(req.body.quantity);
-    
+
     let count = 0;
 
-    if(!req.session.cart) {
+    if (!req.session.cart) {
         req.session.cart = [];
     }
 
-    for(let i = 0; i < req.session.cart.length; i++) {
-        if(req.session.cart[i].product_id == id) {
+    for (let i = 0; i < req.session.cart.length; i++) {
+        if (req.session.cart[i].product_id == id) {
             req.session.cart[i].quantity += quantity;
             count++
         }
     }
 
-    if(count === 0) {
+    if (count === 0) {
         const cart_data = {
-			product_id : id,
-			product_name : name,
-			product_price : price,
-			quantity : quantity,
+            product_id: id,
+            product_name: name,
+            product_price: price,
+            quantity: quantity,
             image: image
-		};
+        };
 
-		req.session.cart.push(cart_data);
+        req.session.cart.push(cart_data);
     }
 
     res.redirect("/shop");
