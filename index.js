@@ -3,10 +3,14 @@ import bodyParser from "body-parser";
 import session from "express-session";
 import pg from "pg";
 import env from "dotenv";
+// Initialize the JS client
+import { createClient } from '@supabase/supabase-js';
 
+env.config();
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 const app = express();
 const port = 3000;
-env.config();
+
 
 app.use(
     session({
@@ -29,17 +33,33 @@ db.connect();
 
 let products = [];
 
+async function getFeatured() {
+    const { data, error } = await supabase.from('product').select('id, image, name, price, brand(name)').like('image', '%f%.jpg');
+    return data;
+}
+async function getNewProduct() {
+    const { data, error } = await supabase.from('product').select('id, image, name, price, brand(name)').like('image', '%n%.jpg');
+    return data;
+}
+
 app.get("/", async (req, res) => {
     let fproducts = [];
     let nproducts = [];
 
-    const fresult = await db.query("SELECT product.id as product_id, image, brand.name as brand_name, product.name as product_name, price FROM product JOIN brand ON product.brand_id = brand.id WHERE image LIKE '%f%' || '%.jpg';");
-    fresult.rows.forEach(product => {
+    // const { data, error } = await supabase.from('product').select('id, image, name, price, brand(name)').like('image', '%f%.jpg');
+
+    const featured = await getFeatured();
+
+    console.log(featured);
+
+    // const fresult = await db.query("SELECT product.id as product_id, image, brand.name as brand_name, product.name as product_name, price FROM product JOIN brand ON product.brand_id = brand.id WHERE image LIKE '%f%' || '%.jpg';");
+    featured.forEach(product => {
         fproducts.push(product);
     });
 
-    const nresult = await db.query("SELECT product.id as product_id, image, brand.name as brand_name, product.name as product_name, price FROM product JOIN brand ON product.brand_id = brand.id WHERE image LIKE '%n%' || '%.jpg';")
-    nresult.rows.forEach(product => {
+    // const nresult = await db.query("SELECT product.id as product_id, image, brand.name as brand_name, product.name as product_name, price FROM product JOIN brand ON product.brand_id = brand.id WHERE image LIKE '%n%' || '%.jpg';")
+    const newProduct = await getNewProduct();
+    newProduct.forEach(product => {
         nproducts.push(product);
     });
 
@@ -54,8 +74,9 @@ app.get("/shop", async (req, res) => {
 
     products = [];
 
-    const result = await db.query("SELECT product.id as product_id, image, brand.name as brand_name, product.name as product_name, price FROM product JOIN brand ON brand.id = product.brand_id;");
-    result.rows.forEach(product => {
+    // const result = await db.query("SELECT product.id as product_id, image, brand.name as brand_name, product.name as product_name, price FROM product JOIN brand ON brand.id = product.brand_id;");
+    const { data, error } = await supabase.from('product').select('id, image, name, price, brand(name)');
+    data.forEach(product => {
         products.push(product);
     });
 
@@ -66,8 +87,9 @@ app.get("/sproduct/:productId", async (req, res) => {
 
     const productId = req.params.productId;
 
-    const result = await db.query("SELECT * FROM product WHERE id = $1", [productId],);
-    req.session.products = result.rows[0];
+    // const result = await db.query("SELECT * FROM product WHERE id = $1", [productId],);
+    const { data, error } = await supabase.from('product').select('*').eq('id', productId);
+    req.session.products = data;
 
     res.redirect("/sproduct");
 });
@@ -81,8 +103,9 @@ app.get("/sproduct", (req, res) => {
         return;
     }
     const product = req.session.products;
+    console.log(product[0]);
 
-    res.render("sproduct.ejs", { active: "shop", product: product });
+    res.render("sproduct.ejs", { active: "shop", product: product[0] });
 });
 
 app.get("/cart", (req, res) => {

@@ -1,46 +1,40 @@
 <%- include("partials/header.ejs") %>
 
-        <section id="page-header">
-            
-            <h2>#stayhome</h2>
-           
-            <p>Save more with coupons & upto 70% Off</p>
-            
+<section id="page-header">
+  <h2>#stayhome</h2>
 
-        </section>
+  <p>Save more with coupons & upto 70% Off</p>
+</section>
 
+<section id="product1" class="section-p1">
+  <div class="pro-container">
+    <% for(var i = 0; i < products.length; i++) {%>
+    <div
+      class="pro"
+      onclick="window.location.href='/sproduct/<%= products[i].id %>';"
+    >
+      <img src="<%= products[i].image %>" alt="" />
+      <div class="description">
+        <span><%= products[i].brand.name %></span>
+        <h5><%= products[i].name %></h5>
+        <div class="star">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+        <h4>LKR <%= products[i].price %></h4>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</section>
 
-        <section id="product1" class="section-p1">
-            
-            <div class="pro-container">
-                <% for(var i = 0; i < products.length; i++) {%>
-                <div class="pro" onclick="window.location.href='/sproduct/<%= products[i].product_id %>';">
-                    <img src="<%= products[i].image %>" alt="">
-                    <div class="description">
-                        <span><%= products[i].brand_name %></span>
-                        <h5><%= products[i].product_name %></h5>
-                        <div class="star">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <h4>LKR <%= products[i].price %></h4>
-                    </div>
-                </div> <% } %>
-            </div>
+<section id="pagination" class="section-p1">
+  <a href="#">1</a>
+  <a href="#">2</a>
+  <a href="#"><i class="fal fa-long-arrow-alt-right"></i></a>
+</section>
 
-        </section>
-
-        <section id="pagination" class="section-p1">
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a href="#"><i class="fal fa-long-arrow-alt-right"></i></a>
-        </section>
-
-        
-
-    <%- include("partials/newsletter.ejs") %>
-
-<%- include("partials/footer.ejs") %>
+<%- include("partials/newsletter.ejs") %> <%- include("partials/footer.ejs") %>
