@@ -178,7 +178,8 @@ app.post("/addtocart", async (req, res) => {
     res.redirect("/shop");
 });
 
+export default app;
 
-app.listen(() => {
-    console.log(`Server is running`);
-});
+// app.listen(() => {
+//     console.log(`Server is running`);
+// });
