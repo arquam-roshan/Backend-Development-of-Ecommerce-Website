@@ -22,14 +22,14 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const db = new pg.Client({
-    user: process.env.PG_USER,
-    host: process.env.PG_HOST,
-    database: process.env.PG_DATABASE,
-    password: process.env.PG_PASS,
-    port: process.env.PG_PORT
-});
-db.connect();
+// const db = new pg.Client({
+//     user: process.env.PG_USER,
+//     host: process.env.PG_HOST,
+//     database: process.env.PG_DATABASE,
+//     password: process.env.PG_PASS,
+//     port: process.env.PG_PORT
+// });
+// db.connect();
 
 let products = [];
 
@@ -141,8 +141,9 @@ app.get("/remove", (req, res) => {
 app.post("/addtocart", async (req, res) => {
     const id = req.body.product_id;
     // get brand name of the product
-    const result = await db.query("SELECT name FROM brand WHERE id = $1", [req.body.brand_id]);
-    const brandName = result.rows[0].name;
+    // const result = await db.query("SELECT name FROM brand WHERE id = $1", [req.body.brand_id]);
+    const { data, error } = await supabase.from('brand').select('name').eq('id', req.body.brand_id);
+    const brandName = data.name;
     const productName = req.body.product_name;
     const name = brandName + " " + productName;
     const price = parseFloat(req.body.price);
