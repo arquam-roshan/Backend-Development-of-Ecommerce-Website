@@ -179,6 +179,6 @@ app.post("/addtocart", async (req, res) => {
 });
 
 
-app.listen(port, () => {
-    console.log(`listening on port ${port}`);
+app.listen(() => {
+    console.log(`Server is running`);
 });
