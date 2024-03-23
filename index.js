@@ -58,7 +58,7 @@ app.get("/", async (req, res) => {
 
     const featured = await getFeatured();
 
-    console.log(featured);
+    // console.log(featured);
 
     // const fresult = await db.query("SELECT product.id as product_id, image, brand.name as brand_name, product.name as product_name, price FROM product JOIN brand ON product.brand_id = brand.id WHERE image LIKE '%f%' || '%.jpg';");
     featured.forEach(product => {
@@ -111,7 +111,7 @@ app.get("/sproduct", (req, res) => {
         return;
     }
     const product = req.session.products;
-    console.log(product[0]);
+    // console.log(product[0]);
 
     res.render("sproduct.ejs", { active: "shop", product: product[0] });
 });
