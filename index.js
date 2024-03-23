@@ -35,10 +35,18 @@ let products = [];
 
 async function getFeatured() {
     const { data, error } = await supabase.from('product').select('id, image, name, price, brand(name)').like('image', '%f%.jpg');
+    if (error) {
+        alert("There was an error with the database");
+        return;
+    }
     return data;
 }
 async function getNewProduct() {
     const { data, error } = await supabase.from('product').select('id, image, name, price, brand(name)').like('image', '%n%.jpg');
+    if (error) {
+        alert("There was an error with the database");
+        return;
+    }
     return data;
 }
 
