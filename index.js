@@ -72,7 +72,7 @@ app.get("/", async (req, res) => {
         nproducts.push(product);
     });
 
-    res.render("index.ejs", {
+    res.render("/views/index.ejs", {
         active: "index",
         fproducts: fproducts,
         nproducts: nproducts
