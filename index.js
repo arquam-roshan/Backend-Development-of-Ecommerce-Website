@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import session from "express-session";
 import pg from "pg";
 import env from "dotenv";
+import ejs from "ejs";
 // Initialize the JS client
 import { createClient } from '@supabase/supabase-js';
 
@@ -188,6 +189,6 @@ app.post("/addtocart", async (req, res) => {
 
 export default app;
 
-// app.listen(() => {
-//     console.log(`Server is running`);
-// });
+app.listen(3000, () => {
+    console.log(`Server is running`);
+});

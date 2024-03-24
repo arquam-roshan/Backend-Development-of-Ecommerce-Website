@@ -1,12 +1,20 @@
 {
-  "type": "module",
+  "name": "backend-development-of-ecommerce-website",
+  "version": "1.0.0",
+  "description": "This repository consists of the back end code for an example e-commerce site. For the backend development I have used ExpressJs with Node as my server side language.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "@supabase/supabase-js": "^2.39.8",
     "body-parser": "^1.20.2",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.9",
-    "express": "^4.18.3",
-    "express-session": "^1.18.0",
-    "pg": "^8.11.3"
+    "express": "^4.19.1",
+    "express-session": "^1.18.0"
   }
 }
